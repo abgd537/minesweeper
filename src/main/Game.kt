@@ -16,16 +16,31 @@ class Game(cols : Int, rows : Int, numberOfMines : Int) : Canvas(), Runnable
 	@Synchronized
 	fun start()
 	{
+		if(running) return
+		
 		thread = Thread(this)
 		thread!!.start()
+		
 		running = true
 	}
 	
 	@Synchronized
-	fun stop()
+	private fun stop()
 	{
-		thread!!.interrupt()
+		if(!running) return
+		
 		running = false
+		
+		try
+		{
+			thread!!.interrupt()
+		}
+		
+		catch(e : Exception)
+		{
+			e.printStackTrace()
+			exitProcess(0)
+		}
 	}
 	
 	override fun run()
